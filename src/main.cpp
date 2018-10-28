@@ -7,16 +7,17 @@
 #include "Cell.h"
 #include "Grid.h"
 
-#define GENERATION_LIMIT 250
+#define GENERATION_LIMIT 500
 
 // Fonts
 extern uint8_t BigFont[]; // 16 x 16
 
 // Objects
 UTFT myGLCD(SSD1289, 38, 39, 40, 41);
-int generation = 0;
-
 Grid grid;
+
+// Globals
+int generation = 0;
 
 void display_screen_size() {
         char screen_size[8];
@@ -44,7 +45,6 @@ void setup() {
         myGLCD.fillScr(VGA_BLACK);
         myGLCD.setColor(VGA_WHITE);
         myGLCD.setFont(BigFont);
-        myGLCD.setBrightness(10);
 
         display_screen_size();
         delay(5000);
@@ -71,6 +71,7 @@ void loop() {
                 for (unsigned int x = 0; x < grid.width; x++) {
                         Cell *cell = &grid.cells[y][x];
                         int neighbors = grid.neighbor_count(cell);
+
                         if (cell->alive && cell->death_condition(neighbors)) {
                                 cell->to_kill = true;
                         } else if (!cell->alive && cell->birth_condition(neighbors)) {
@@ -86,6 +87,11 @@ void loop() {
                         if (cell->to_kill) {
                                 cell->kill(&myGLCD);
                         } else if (cell->to_birth) {
+                                unsigned char r = grid.average_r(cell);
+                                unsigned char g = grid.average_g(cell);
+                                unsigned char b = grid.average_b(cell);
+
+                                cell->set_color(r, g, b);
                                 cell->birth(&myGLCD);
                         }
                 }

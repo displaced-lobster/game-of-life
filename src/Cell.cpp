@@ -9,6 +9,7 @@ void Cell::draw(UTFT *GLCD) {
         int y1 = y * cell_height;
         int y2 = y1 + cell_height;
 
+        GLCD->setColor(r, g, b);
         GLCD->fillRect(x1, y1, x2, y2);
 }
 
@@ -19,9 +20,10 @@ bool Cell::death_condition(int neighbors) {
 void Cell::kill(UTFT *GLCD) {
         alive = false;
         to_kill = false;
-        GLCD->setColor(VGA_BLACK);
+        r = 0;
+        g = 0;
+        b = 0;
         draw(GLCD);
-        GLCD->setColor(VGA_WHITE);
 }
 
 void Cell::birth(UTFT *GLCD) {
@@ -32,4 +34,10 @@ void Cell::birth(UTFT *GLCD) {
 
 bool Cell::birth_condition(int neighbors) {
         return neighbors == 3;
+}
+
+void Cell::set_color(unsigned char new_r, unsigned char new_g, unsigned char new_b) {
+        r = new_r;
+        g = new_g;
+        b = new_b;
 }
