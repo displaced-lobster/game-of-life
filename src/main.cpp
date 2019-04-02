@@ -14,6 +14,7 @@ extern uint8_t BigFont[]; // 16 x 16
 
 // Objects
 UTFT myGLCD(SSD1289, 38, 39, 40, 41);
+URTouch myTouch(6, 5, 4, 3, 2);
 Grid grid;
 
 // Globals
